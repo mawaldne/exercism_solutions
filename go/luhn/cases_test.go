@@ -1,8 +1,8 @@
 package luhn
 
 // Source: exercism/problem-specifications
-// Commit: 3930b0a luhn: add a test case of strings with non-digits (#1246)
-// Problem Specifications Version: 1.2.0
+// Commit: d7fdadc Luhn: Add a test with an odd number of spaces (#1500)
+// Problem Specifications Version: 1.6.0
 
 var testCases = []struct {
 	description string
@@ -45,8 +45,18 @@ var testCases = []struct {
 		false,
 	},
 	{
-		"valid strings with a non-digit included become invalid",
-		"055a 444 285",
+		"valid number with an even number of digits",
+		"095 245 88",
+		true,
+	},
+	{
+		"valid number with an odd number of spaces",
+		"234 567 891 234",
+		true,
+	},
+	{
+		"valid strings with a non-digit added at the end become invalid",
+		"059a",
 		false,
 	},
 	{
@@ -75,7 +85,12 @@ var testCases = []struct {
 		true,
 	},
 	{
-		"strings with non-digits is invalid",
+		"using ascii value for non-doubled non-digit isn't allowed",
+		"055b 444 285",
+		false,
+	},
+	{
+		"using ascii value for doubled non-digit isn't allowed",
 		":9",
 		false,
 	},

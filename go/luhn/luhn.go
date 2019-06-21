@@ -15,15 +15,6 @@ func Reverse(s string) string {
 	return string(r)
 }
 
-func Digits(numberStr string) bool {
-	for _, n := range numberStr {
-		if _, err := strconv.Atoi(string(n)); err != nil {
-			return false
-		}
-	}
-	return true
-}
-
 func Sum(numberStr string) (sum int) {
 	for i, n := range numberStr {
 		num, _ := strconv.Atoi(string(n))
@@ -40,7 +31,9 @@ func Sum(numberStr string) (sum int) {
 
 func Valid(s string) bool {
 	numberStr := strings.ReplaceAll(Reverse(s), " ", "")
-	if len(numberStr) < 2 || !Digits(numberStr) {
+	_, err := strconv.Atoi(numberStr)
+
+	if len(numberStr) < 2 || err != nil {
 		return false
 	}
 	sum := Sum(numberStr)

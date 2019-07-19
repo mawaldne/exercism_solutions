@@ -6,33 +6,30 @@ import (
 
 const testVersion = 4
 
-type Clock struct {
-    hours, minutes int
-}
+type Clock int16
 
 func New(hour, minute int) Clock {
-    minutes := minute % 60
-    if minutes < 0 {
-        minutes = minutes + 60
-    }
+	return Time(hour, minute)
+}
 
-    additional_hours := minute / 60
-    hours := (hour + additional_hours) % 24
-    if hours < 0 {
-        hours = hours + 24
-    }
+func Time(hour, minute int) Clock {
+	minutes := (minute + hour*60) % 1440
+	if minutes < 0 {
+		minutes = minutes + 1440
+	}
 
-    return Clock {
-     hours : hours,
-     minutes : minutes,
-    }
+	return Clock(minutes)
 }
 
 func (c Clock) String() string {
-    return fmt.Sprintf("%02d:%02d", c.hours, c.minutes)
+	return fmt.Sprintf("%02d:%02d", c/60, c%60)
 }
 
+// Add returns a Clock with the provided minutes added.
 func (c Clock) Add(minutes int) Clock {
-    c.minutes += minutes
-    return c
+	return Time(0, int(c)+minutes)
+}
+
+func (c Clock) Subtract(minutes int) Clock {
+	return Time(0, int(c)-minutes)
 }

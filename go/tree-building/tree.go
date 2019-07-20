@@ -3,6 +3,8 @@ package tree
 import (
 	"fmt"
 	"sort"
+
+	"github.com/pkg/errors"
 )
 
 type Node struct {
@@ -25,25 +27,22 @@ func Build(records []Record) (*Node, error) {
 	})
 
 	if records[0].ID != 0 {
-		return nil, fmt.Errorf("no root node")
+		return nil, errors.New("invalid root node")
+	}
+
+	if records[len(records)-1].ID >= len(records) {
+		return nil, errors.New("non continuous")
 	}
 
 	nodes := make([]Node, len(records))
-
 	for i, record := range records {
 		if record.Parent > record.ID {
 			return nil, fmt.Errorf("parent id can't be higher than ID")
 		}
-		if records[i].ID != 0 && records[i].ID == records[i].Parent {
-			return nil, fmt.Errorf("no direct cycle. Node 0 is the only parent of itself")
+		if i > 0 && (i != record.ID || record.ID <= record.Parent) {
+			return nil, errors.New("duplicate")
 		}
-		if i > 1 && records[i].ID-records[i-1].ID != 1 {
-			return nil, fmt.Errorf("duplicate or missing IDs are not allowed")
-		}
-		nodes[i] = Node{ID: record.ID}
-	}
-
-	for _, record := range records {
+		nodes[record.ID] = Node{ID: record.ID}
 		if record.ID == 0 {
 			continue
 		}

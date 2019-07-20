@@ -1,7 +1,6 @@
 package tree
 
 import (
-	"fmt"
 	"sort"
 
 	"github.com/pkg/errors"
@@ -30,14 +29,10 @@ func Build(records []Record) (*Node, error) {
 		return nil, errors.New("invalid root node")
 	}
 
-	if records[len(records)-1].ID >= len(records) {
-		return nil, errors.New("non continuous")
-	}
-
 	nodes := make([]Node, len(records))
 	for i, record := range records {
 		if record.Parent > record.ID {
-			return nil, fmt.Errorf("parent id can't be higher than ID")
+			return nil, errors.New("parent id can't be higher than ID")
 		}
 		if i > 0 && (i != record.ID || record.ID <= record.Parent) {
 			return nil, errors.New("duplicate")

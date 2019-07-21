@@ -20,7 +20,7 @@ func (r *Robot) Name() (string, error) {
 }
 
 func (r *Robot) Reset() {
-	r.name = generate()
+	r.name = ""
 }
 
 func generate() string {
